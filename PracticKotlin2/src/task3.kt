@@ -5,12 +5,12 @@
 со значением по умолчанию - условием, что указано было в вашем варианте)
 */
 
-tailrec fun sumTailre(number : Int, sum : Int = 0,
+private tailrec fun sumTailrec(number : Int, sum : Int = 0,
                       check : (Int) -> Int = { if (it % 2 != 0) it else 0 }): Int =
     if (number == 0) sum
-    else sumTailre(number / 10, sum + check(number % 10), check)
+    else sumTailrec(number / 10, sum + check(number % 10), check)
 
-fun summ(number : Int, check : (Int) -> Int = { if (it % 2 != 0) it else 0 }) : Int {
+private fun sum(number : Int, check : (Int) -> Int = { if (it % 2 != 0) it else 0 }) : Int {
     var sum = 0
     var loopNumber = number
     while (loopNumber != 0) {
@@ -27,9 +27,9 @@ fun main() {
         try {
             if (number.toInt() > 0) {
                 val lambda = { it : Int -> if (it % 3 == 0) it else 0 }
-                var result = summ(number.toInt(), lambda)
+                var result = sum(number.toInt(), lambda)
                 println(if (result == 0) "sum = 0 or was error" else "simple function: $result")
-                result = sumTailre(number.toInt(), check = lambda)
+                result = sumTailrec(number.toInt(), check = lambda)
                 println(if (result == 0) "sum = 0 or was error" else "tailrec function: $result")
             }
             else println("Number must be > 0")

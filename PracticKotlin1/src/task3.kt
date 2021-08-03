@@ -6,10 +6,8 @@
 
 fun main() {
     print("Write some words with spaces -> ")
-    val string = readLine()
-    val result = string?.split(" ")
-                       ?.firstOrNull { it.isNotEmpty() && it.length % 2 != 0 }
-                       ?.toString()
-                       ?.last()
-    println(result ?: "empty result")
+    println(readLine()?.split(" ")
+                      ?.firstOrNull { it.isNotEmpty() && it.length % 2 != 0 }
+                      ?.toString()
+                      ?.last() ?: "empty result")
 }

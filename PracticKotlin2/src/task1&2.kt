@@ -5,12 +5,12 @@
 //вынести проверяемое условие в отдельную single expression функцию
 
 //single expression function
-fun singleCheck(num : Int) = if (num % 2 != 0) num else 0
+private fun singleCheck(num : Int) = if (num % 2 != 0) num else 0
 
-tailrec fun sumTailrec(number : Int, sum : Int = 0): Int = if (number == 0) sum
+private tailrec fun sumTailrec(number : Int, sum : Int = 0): Int = if (number == 0) sum
     else sumTailrec(number / 10, sum + singleCheck(number % 10))
 
-fun sum(number : Int) : Int {
+private fun sum(number : Int) : Int {
     var sum = 0
     var loopNumber = number
     while (loopNumber != 0) {
