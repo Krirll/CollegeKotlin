@@ -24,19 +24,15 @@ fun main() {
     print("Write number (must be > 0) -> ")
     val number = readLine()
     if (number != null) {
-        try {
+        if (number.toIntOrNull() != null) {
             if (number.toInt() > 0) {
-                val lambda = { it : Int -> if (it % 3 == 0) it else 0 }
+                val lambda = { it: Int -> if (it % 3 == 0) it else 0 }
                 var result = sum(number.toInt(), lambda)
                 println(if (result == 0) "sum = 0 or was error" else "simple function: $result")
                 result = sumTailrec(number.toInt(), check = lambda)
                 println(if (result == 0) "sum = 0 or was error" else "tailrec function: $result")
-            }
-            else println("Number must be > 0")
-        }
-        catch (ex: NumberFormatException) {
-            println("You must write integer value, not string!")
-        }
+            } else println("Number must be more than 0")
+        } else println("Number must be an integer value and more than 0")
     }
     else print("value is null")
 }

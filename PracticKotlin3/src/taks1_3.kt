@@ -1,23 +1,22 @@
-//вынести основной алгоритм пр.№1 задание №1 в функцию
-//1. как обычную функцию
-//2. как tailrec-функцию
-
-//вынести проверяемое условие в отдельную single expression функцию
-
-//single expression function
+/*
+задания №1-3 практической №2 выполнить с использованием функционального
+подхода в одно выражение каждое (без учета ввода-вывода)
+*/
 private fun singleCheck(num : Int) = if (num % 2 != 0) num else 0
 
 private tailrec fun sumTailrec(number : Int, sum : Int = 0): Int = if (number == 0) sum
-    else sumTailrec(number / 10, sum + singleCheck(number % 10))
+else sumTailrec(number / 10, sum + singleCheck(number % 10))
 
 private fun sum(number : Int) : Int {
-    var sum = 0
+    /*var sum = 0
     var loopNumber = number
     while (loopNumber != 0) {
         sum += singleCheck(loopNumber % 10)
         loopNumber /= 10
+    }*/
+    return number.toString().split(" ").map { it.toInt() }.sumOf {
+        if (it % 2 != 0) it else 0
     }
-    return sum
 }
 
 fun main() {
