@@ -6,20 +6,14 @@
 
 fun countSameNumbers(vararg numbers : String) : String {
     var existsNumbers = ""
-    try {
-        for (sym in numbers[0]) {
-            var currentCount = 0
-            for (nextNum in numbers) {
-                if (nextNum.contains(sym)) currentCount += 1
-            }
-            if (currentCount == numbers.count()) {
-                if (!existsNumbers.contains(sym)) existsNumbers += "$sym "
-            }
+    for (sym in numbers[0]) {
+        var currentCount = 0
+        for (nextNum in numbers) {
+            if (nextNum.contains(sym)) currentCount += 1
         }
-    }
-    catch(ex : StringIndexOutOfBoundsException) {
-        println("Incorrect string! Was exception")
-        existsNumbers = ""
+        if (currentCount == numbers.count()) {
+            if (!existsNumbers.contains(sym)) existsNumbers += "$sym "
+        }
     }
     return if (existsNumbers == "") "nothing" else existsNumbers
 }
