@@ -5,16 +5,17 @@
 //вынести проверяемое условие в отдельную single expression функцию
 
 //single expression function
-private fun singleCheck(num : Int) = if (num % 2 != 0) num else 0
+private fun singleCheck(num : Int) = num % 2 != 0
 
-private tailrec fun sumTailrec(number : Int, sum : Int = 0): Int = if (number == 0) sum
-    else sumTailrec(number / 10, sum + singleCheck(number % 10))
+private tailrec fun sumTailrec(number : Int, sum : Int = 0): Int =
+    if (number == 0) sum
+    else sumTailrec(number / 10, if (singleCheck(number % 10)) sum + number % 10 else sum)
 
 private fun sum(number : Int) : Int {
     var sum = 0
     var loopNumber = number
     while (loopNumber != 0) {
-        sum += singleCheck(loopNumber % 10)
+        if (singleCheck(loopNumber % 10)) sum += loopNumber % 10
         loopNumber /= 10
     }
     return sum

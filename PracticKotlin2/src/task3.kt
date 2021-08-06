@@ -6,15 +6,15 @@
 */
 
 private tailrec fun sumTailrec(number : Int, sum : Int = 0,
-                      check : (Int) -> Int = { if (it % 2 != 0) it else 0 }): Int =
+                      check : (Int) -> Boolean = { it % 2 != 0 }): Int =
     if (number == 0) sum
-    else sumTailrec(number / 10, sum + check(number % 10), check)
+    else sumTailrec(number / 10, if (check(number % 10)) sum + number % 10 else sum, check)
 
-private fun sum(number : Int, check : (Int) -> Int = { if (it % 2 != 0) it else 0 }) : Int {
+private fun sum(number: Int, check: (Int) -> Boolean = { it % 2 != 0 }) : Int {
     var sum = 0
     var loopNumber = number
     while (loopNumber != 0) {
-        sum += check(loopNumber % 10)
+        if (check(loopNumber % 10)) sum += loopNumber % 10
         loopNumber /= 10
     }
     return sum
@@ -26,7 +26,7 @@ fun main() {
     if (number != null) {
         if (number.toIntOrNull() != null) {
             if (number.toInt() > 0) {
-                val lambda = { it: Int -> if (it % 3 == 0) it else 0 }
+                val lambda = { it : Int ->  it % 2 == 0 }
                 var result = sum(number.toInt(), lambda)
                 println(if (result == 0) "sum = 0 or was error" else "simple function: $result")
                 result = sumTailrec(number.toInt(), check = lambda)
