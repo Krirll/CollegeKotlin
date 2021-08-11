@@ -4,7 +4,7 @@
 новую функцию - произведение данных (кол-во исходных функций - любое)
 */
 private fun multiply(vararg functions : (Int) -> Int) : (Int) -> Int {
-    return { x -> functions.map { it(x) }.fold(1) {a, b -> a * b} }
+    return { x -> functions.map { it(x) }.reduce {a, b -> a * b} }
 }
 
 fun main() {
