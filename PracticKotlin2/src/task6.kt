@@ -4,10 +4,10 @@
 новую функцию - произведение данных (кол-во исходных функций - любое)
 */
 private fun multiply(vararg functions : (Int) -> Int) : (Int) -> Int {
-    return { x -> functions.map { it(x) }.fold(1) {res, x -> res * x} }
+    return { x -> functions.map { it(x) }.fold(1) {a, b -> a * b} }
 }
 
 fun main() {
-    val function = multiply({x : Int -> x * x}, { x : Int -> x * x * x})
-    println(function(3))
+    val function = multiply({x : Int -> x * x}, { x : Int -> x * x * x}, {x -> x * x * x * x})
+    println(function(2))
 }
