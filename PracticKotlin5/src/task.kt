@@ -13,34 +13,79 @@ interface MethodsAndFields {
     fun edit()
     fun sort()
     fun search()
-    fun printAll()
+    fun printAll() : Boolean
 }
 
-class DB : MethodsAndFields
-{
-    override val fields: Array<String>
-        get() = arrayOf("product", "price", "count", "dateOfBuy")
-    override val commands: Array<String>
-        get() = arrayOf("add", "delete", "edit", "sort", "search", "print all", "exit")
-    private lateinit var objects : MutableList<ElementOfDB>
+class DB : MethodsAndFields {
+    override val fields: Array<String> = arrayOf("product", "price", "count", "dateOfBuy")
+    override val commands: Array<String> = arrayOf("add", "delete", "edit", "sort", "search", "print all", "exit")
+    private var objects : MutableList<ElementOfDB> = mutableListOf()
 
     override fun add() {
-        //TODO: бесконечно принимать пока не будет написано правильно
         val elem = ElementOfDB()
-        print("Write a name of product -> ")
-        elem.product = readLine() ?: "unknown name of product"
-        print("Write price of product -> ")
-        elem.price = readLine()?.toInt() ?: -1
-        print("Write count of product -> ")
-        elem.count = readLine()?.toInt() ?: -1
-        print("Write date of buy -> ")
-        elem.dateOfBuy = readLine() ?: "unknown date of buy"
+        while (!elem.product.matches("\\w+".toRegex())) {
+            print("Write a name of product -> ")
+            elem.product = readLine().toString()
+        }
+        while (!elem.price.toString().matches("\\d+".toRegex()) && elem.price != 0) {
+            print("Write price of product -> ")
+            val price = readLine()
+            if (price?.toIntOrNull() != null) elem.price = price.toInt()
+        }
+        while (!elem.count.toString().matches("\\d+".toRegex()) && elem.price != 0) {
+            print("Write count of product -> ")
+            val count = readLine()
+            if (count?.toIntOrNull() != null) elem.count = count.toInt()
+        }
+        while (!elem.dateOfBuy.matches("[0-3]?[1-9]\\.[0-1]?[1-9]\\.20\\d\\d".toRegex())) {
+            print("Write date of buy (format dd.mm.yyyy or d.m.yyyy) -> ")
+            elem.dateOfBuy = readLine().toString()
+        }
+        objects.add(elem)
     }
     override fun delete() {
-
+        if (!printAll()) {
+            var flag = false
+            while (!flag) {
+                print("Write a number of element you want to delete -> ")
+                val number = readLine()
+                if (number?.toIntOrNull() != null) {
+                    if (number.toInt() in 1..objects.size) {
+                        objects.removeAt(number.toInt() - 1)
+                        flag = true
+                    }
+                    else println("Incorrect number of element!")
+                }
+            }
+        }
     }
     override fun edit() {
-
+        if (!printAll()) {
+            var flag = false
+            while (!flag) {
+                print("Write a number of element you want to edit -> ")
+                val number = readLine()
+                if (number?.toIntOrNull() != null) {
+                    if (number.toInt() in 1..objects.size) {
+                        while (!flag) {
+                            print("write a number of parameter you want to edit -> ")
+                            val param = readLine()
+                            if (param?.toIntOrNull() != null)
+                                when (param.toInt()) {
+                                    //TODO: скопировать проверки ввода из add
+                                    1 -> {}
+                                    2 -> {}
+                                    3 -> {}
+                                    4 -> {}
+                                    else -> println("Incorrect number of parameter!")
+                                }
+                            flag = true
+                        }
+                    }
+                    else print("Incorrect number of element!")
+                }
+            }
+        }
     }
     override fun sort() {
 
@@ -48,8 +93,17 @@ class DB : MethodsAndFields
     override fun search() {
 
     }
-    override fun printAll() {
-        for (elem in objects) println("")
+    override fun printAll() : Boolean {
+        var flag = false
+        if (objects.isEmpty()) {
+            println("\nDataBase is empty!\n")
+            flag = true
+        }
+        else {
+            for (i in objects.indices)
+                println("${i + 1}. product: ${objects[i].product}; price: ${objects[i].price}; count: ${objects[i].count}; date of buy: ${objects[i].dateOfBuy}")
+        }
+        return flag //if list is empty - true, else false
     }
 }
 
@@ -71,16 +125,16 @@ fun main() {
         if (cmd?.toIntOrNull() != null) {
             cmdNum = cmd.toInt()
             when (cmdNum) {
-                1 -> dataBase.add() //add
-                2 -> dataBase.delete() //delete
-                3 -> { } //edit
-                4 -> { } //sort
-                5 -> { } //search
-                6 -> { } //print
+                1 -> dataBase.add()
+                2 -> dataBase.delete()
+                3 -> dataBase.edit()
+                4 -> dataBase.sort()
+                5 -> dataBase.search()
+                6 -> dataBase.printAll()
                 7 -> println("\nSee you again)")
-                else -> println("\nCommand wasn't found. Try again!\n")
+                else -> print("\nCommand wasn't found. Try again!\n")
             }
         }
-        else println("Command wasn't found. Try again!\n")
+        else print("\nCommand wasn't found. Try again!\n")
     }
 }
