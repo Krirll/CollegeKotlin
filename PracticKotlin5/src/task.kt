@@ -27,12 +27,12 @@ class DB : MethodsAndFields {
             print("Write a name of product -> ")
             elem.product = readLine().toString()
         }
-        while (!elem.price.toString().matches("\\d+".toRegex()) && elem.price != 0) {
+        while (!elem.price.toString().matches("^[1-9]+\\d*".toRegex())) {
             print("Write price of product -> ")
             val price = readLine()
             if (price?.toIntOrNull() != null) elem.price = price.toInt()
         }
-        while (!elem.count.toString().matches("\\d+".toRegex()) && elem.price != 0) {
+        while (!elem.count.toString().matches("^[1-9]+\\d*?".toRegex())) {
             print("Write count of product -> ")
             val count = readLine()
             if (count?.toIntOrNull() != null) elem.count = count.toInt()
@@ -64,22 +64,56 @@ class DB : MethodsAndFields {
             var flag = false
             while (!flag) {
                 print("Write a number of element you want to edit -> ")
-                val number = readLine()
+                var number = readLine()
                 if (number?.toIntOrNull() != null) {
                     if (number.toInt() in 1..objects.size) {
+                        number = (number.toInt() - 1).toString()
                         while (!flag) {
+                            val lastCommand = fields.count()
+                            println("Parameters:")
+                            for (i in 0..lastCommand) {
+                                if (i == lastCommand) {
+                                    println("${i + 1}. exit")
+                                }
+                                else println("${i + 1}. ${fields[i]}")
+                            }
                             print("write a number of parameter you want to edit -> ")
                             val param = readLine()
                             if (param?.toIntOrNull() != null)
                                 when (param.toInt()) {
-                                    //TODO: скопировать проверки ввода из add
-                                    1 -> {}
-                                    2 -> {}
-                                    3 -> {}
-                                    4 -> {}
-                                    else -> println("Incorrect number of parameter!")
+                                    1 -> { //edit product
+                                        objects[number.toInt()].product = ""
+                                        while (!objects[number.toInt()].product.matches("\\w+".toRegex())) {
+                                            print("Write a name of product -> ")
+                                            objects[number.toInt()].product = readLine().toString()
+                                        }
+                                    }
+                                    2 -> { //price
+                                        objects[number.toInt()].price = 0
+                                        while (!objects[number.toInt()].price.toString().matches("^[1-9]+\\d*".toRegex())) {
+                                            print("Write price of product -> ")
+                                            val price = readLine()
+                                            if (price?.toIntOrNull() != null) objects[number.toInt()].price = price.toInt()
+                                        }
+                                    }
+                                    3 -> { //count
+                                        objects[number.toInt()].count = 0
+                                        while (!objects[number.toInt()].count.toString().matches("^[1-9]+\\d*".toRegex())) {
+                                            print("Write count of product -> ")
+                                            val count = readLine()
+                                            if (count?.toIntOrNull() != null) objects[number.toInt()].count = count.toInt()
+                                        }
+                                    }
+                                    4 -> { //dateOfBuy
+                                        objects[number.toInt()].dateOfBuy = ""
+                                        while (!objects[number.toInt()].dateOfBuy.matches("[0-3]?[0-9]\\.[0-1]?[0-9]\\.20\\d\\d".toRegex())) {
+                                            print("Write date of buy (format dd.mm.yyyy or d.m.yyyy) -> ")
+                                            objects[number.toInt()].dateOfBuy = readLine().toString()
+                                        }
+                                    }
+                                    lastCommand + 1 -> flag = true //exit from edit function
+                                    else -> println("\nIncorrect number of parameter!\n")
                                 }
-                            flag = true
                         }
                     }
                     else print("Incorrect number of element!")
@@ -88,10 +122,108 @@ class DB : MethodsAndFields {
         }
     }
     override fun sort() {
-
+        if (objects.isNotEmpty()) {
+            for (i in fields.indices) println("${i + 1}. ${fields[i]}")
+            var flag = false
+            while (!flag) {
+                print("Write a number of sort -> ")
+                val sort = readLine()
+                if (sort?.toIntOrNull() != null) {
+                    when (sort.toInt()) {
+                        1 -> {
+                            flag = true
+                            objects.sortBy { it.product }
+                        }
+                        2 -> {
+                            flag = true
+                            objects.sortBy { it.price }
+                        }
+                        3 -> {
+                            flag = true
+                            objects.sortBy { it.count }
+                        }
+                        4 -> {
+                            flag = true
+                            objects.sortBy { it.dateOfBuy }
+                        }
+                        else -> println("\nIncorrect number of sort!\n")
+                    }
+                }
+            }
+        }
+        else println("\nDataBase is empty!\n")
     }
     override fun search() {
-
+        if (objects.isNotEmpty()) {
+            for (i in fields.indices) println("${i + 1}. ${fields[i]}")
+            var flag = false
+            while (!flag) {
+                print("Write a number of search -> ")
+                val search = readLine()
+                if (search?.toIntOrNull() != null) {
+                    when (search.toInt()) {
+                        1 -> {
+                            flag = true
+                            println("Write a name of product -> ")
+                            val product = readLine()
+                            if (product != null) {
+                                for (i in objects.indices) {
+                                    if (objects[i].product.contains(product))
+                                        println("${i + 1}. product: ${objects[i].product}; " +
+                                                "price: ${objects[i].price}; " +
+                                                "count : ${objects[i].count}; " +
+                                                "date of buy: ${objects[i].dateOfBuy}")
+                                }
+                            }
+                        }
+                        2 -> {
+                            flag = true
+                            println("Write price -> ")
+                            val price = readLine()
+                            if (price != null) {
+                                for (i in objects.indices) {
+                                    if (objects[i].price == price.toInt())
+                                        println("${i + 1}. product: ${objects[i].product}; " +
+                                                "price: ${objects[i].price}; " +
+                                                "count : ${objects[i].count}; " +
+                                                "date of buy: ${objects[i].dateOfBuy}")
+                                }
+                            }
+                        }
+                        3 -> {
+                            flag = true
+                            println("Write count -> ")
+                            val count = readLine()
+                            if (count != null) {
+                                for (i in objects.indices) {
+                                    if (objects[i].count == count.toInt())
+                                        println("${i + 1}. product: ${objects[i].product}; " +
+                                                "price: ${objects[i].price}; " +
+                                                "count : ${objects[i].count}; " +
+                                                "date of buy: ${objects[i].dateOfBuy}")
+                                }
+                            }
+                        }
+                        4 -> {
+                            flag = true
+                            println("Write a name of product -> ")
+                            val date = readLine()
+                            if (date != null) {
+                                for (i in objects.indices) {
+                                    if (objects[i].dateOfBuy.contains(date))
+                                        println("${i + 1}. product: ${objects[i].product}; " +
+                                                "price: ${objects[i].price}; " +
+                                                "count : ${objects[i].count}; " +
+                                                "date of buy: ${objects[i].dateOfBuy}")
+                                }
+                            }
+                        }
+                        else -> println("\nIncorrect number of sort!\n")
+                    }
+                }
+            }
+        }
+        else println("\nDataBase is empty!\n")
     }
     override fun printAll() : Boolean {
         var flag = false
@@ -110,7 +242,7 @@ class DB : MethodsAndFields {
 class ElementOfDB(var product: String = "unknown name of product",
                   var price: Int = -1,
                   var count: Int = -1,
-                  var dateOfBuy: String = "unknown date of buy")
+                  var dateOfBuy: String = "")
 
 fun main() {
     val dataBase = DB()
