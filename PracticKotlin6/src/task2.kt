@@ -20,8 +20,7 @@ class List (private var list : MutableList<String> = mutableListOf()) {
 
     fun<T> insert(elem : T, n : Int) : Boolean {
         val currentSize = list.size
-        if (n > currentSize) list.add(currentSize, elem.toString())
-        else list.add(n - 1,elem.toString())
+        if (n - 1 in 0..currentSize) list.add(n - 1, elem.toString())
         return list.size > currentSize //if element was added - true, else false
     }
 
@@ -36,9 +35,9 @@ class List (private var list : MutableList<String> = mutableListOf()) {
 
 fun main() {
     val list = List()
-    list.insert("some", 5)
+    list.insert("some", 1)
     list.insert(LocalDate.now(), 1)
-    list.insert(10, 1)
+    list.insert(10, 3)
     list.insert("new", 2)
     list.delete()
     list.print()
