@@ -1,3 +1,7 @@
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+
 /*
 реализовать с использованием ООП простейшую консольную базу данных
 без красивого интерфейса.
@@ -37,9 +41,13 @@ class DB : MethodsAndFields {
             val count = readLine()
             if (count?.toIntOrNull() != null) elem.count = count.toInt()
         }
-        while (!elem.dateOfBuy.matches("[0-3]?[1-9]\\.[0-1]?[1-9]\\.20\\d\\d".toRegex())) {
-            print("Write date of buy (format dd.mm.yyyy or d.m.yyyy) -> ")
-            elem.dateOfBuy = readLine().toString()
+        while (elem.dateOfBuy == LocalDate.now()) {
+                print("Write date of buy (format dd.mm.yyyy) -> ")
+            try {
+                val newDate = LocalDate.parse(readLine(),DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                if (newDate != null) elem.dateOfBuy = newDate
+            }
+            catch (ex : DateTimeParseException) {}
         }
         objects.add(elem)
     }
@@ -105,10 +113,14 @@ class DB : MethodsAndFields {
                                         }
                                     }
                                     4 -> { //dateOfBuy
-                                        objects[number.toInt()].dateOfBuy = ""
-                                        while (!objects[number.toInt()].dateOfBuy.matches("[0-3]?[0-9]\\.[0-1]?[0-9]\\.20\\d\\d".toRegex())) {
-                                            print("Write date of buy (format dd.mm.yyyy or d.m.yyyy) -> ")
-                                            objects[number.toInt()].dateOfBuy = readLine().toString()
+                                        objects[number.toInt()].dateOfBuy = LocalDate.now()
+                                        while (objects[number.toInt()].dateOfBuy == LocalDate.now()) {
+                                            print("Write date of buy (format dd.mm.yyyy) -> ")
+                                            try {
+                                                val newDate = LocalDate.parse(readLine(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                                                if (newDate != null) objects[number.toInt()].dateOfBuy = newDate
+                                            }
+                                            catch (ex : DateTimeParseException) {}
                                         }
                                     }
                                     lastCommand + 1 -> flag = true //exit from edit function
@@ -206,16 +218,23 @@ class DB : MethodsAndFields {
                         }
                         4 -> {
                             flag = true
-                            println("Write a name of product -> ")
-                            val date = readLine()
-                            if (date != null) {
-                                for (i in objects.indices) {
-                                    if (objects[i].dateOfBuy.contains(date))
-                                        println("${i + 1}. product: ${objects[i].product}; " +
+                            var date = LocalDate.now()
+                            while (date == LocalDate.now()) {
+                                println("Write a date of buy (format dd.mm.yyyy) -> ")
+                                try {
+                                    val newDate = LocalDate.parse(readLine(),
+                                        DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                                    if (newDate != null) date = newDate
+                                } catch (ex: DateTimeParseException) {
+                                }
+                            }
+                            for (i in objects.indices) {
+                                if (objects[i].dateOfBuy == date)
+                                    println("${i + 1}. product: ${objects[i].product}; " +
                                                 "price: ${objects[i].price}; " +
                                                 "count : ${objects[i].count}; " +
-                                                "date of buy: ${objects[i].dateOfBuy}")
-                                }
+                                                "date of buy: ${objects[i].dateOfBuy}"
+                                    )
                             }
                         }
                         else -> println("\nIncorrect number of sort!\n")
@@ -242,7 +261,7 @@ class DB : MethodsAndFields {
 class ElementOfDB(var product: String = "unknown name of product",
                   var price: Int = -1,
                   var count: Int = -1,
-                  var dateOfBuy: String = "")
+                  var dateOfBuy: LocalDate = LocalDate.now())
 
 fun main() {
     val dataBase = DB()
