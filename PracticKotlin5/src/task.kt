@@ -181,10 +181,7 @@ class DB : MethodsAndFields {
                             if (product != null) {
                                 for (i in objects.indices) {
                                     if (objects[i].product.contains(product))
-                                        println("${i + 1}. product: ${objects[i].product}; " +
-                                                "price: ${objects[i].price}; " +
-                                                "count : ${objects[i].count}; " +
-                                                "date of buy: ${objects[i].dateOfBuy}")
+                                        println("${i + 1}. ${objects[i].toString().removeRange(0..10)}")
                                 }
                             }
                         }
@@ -195,10 +192,7 @@ class DB : MethodsAndFields {
                             if (price != null) {
                                 for (i in objects.indices) {
                                     if (objects[i].price == price.toInt())
-                                        println("${i + 1}. product: ${objects[i].product}; " +
-                                                "price: ${objects[i].price}; " +
-                                                "count : ${objects[i].count}; " +
-                                                "date of buy: ${objects[i].dateOfBuy}")
+                                        println("${i + 1}. ${objects[i].toString().removeRange(0..10)}")
                                 }
                             }
                         }
@@ -209,10 +203,7 @@ class DB : MethodsAndFields {
                             if (count != null) {
                                 for (i in objects.indices) {
                                     if (objects[i].count == count.toInt())
-                                        println("${i + 1}. product: ${objects[i].product}; " +
-                                                "price: ${objects[i].price}; " +
-                                                "count : ${objects[i].count}; " +
-                                                "date of buy: ${objects[i].dateOfBuy}")
+                                        println("${i + 1}. ${objects[i].toString().removeRange(0..10)}")
                                 }
                             }
                         }
@@ -230,10 +221,7 @@ class DB : MethodsAndFields {
                             }
                             for (i in objects.indices) {
                                 if (objects[i].dateOfBuy == date)
-                                    println("${i + 1}. product: ${objects[i].product}; " +
-                                                "price: ${objects[i].price}; " +
-                                                "count : ${objects[i].count}; " +
-                                                "date of buy: ${objects[i].dateOfBuy}"
+                                    println("${i + 1}. ${objects[i].toString().removeRange(0..10)}"
                                     )
                             }
                         }
@@ -252,13 +240,13 @@ class DB : MethodsAndFields {
         }
         else {
             for (i in objects.indices)
-                println("${i + 1}. product: ${objects[i].product}; price: ${objects[i].price}; count: ${objects[i].count}; date of buy: ${objects[i].dateOfBuy}")
+                println("${i + 1}. ${objects[i].toString().removeRange(0..10)}")
         }
         return flag //if list is empty - true, else false
     }
 }
 
-class ElementOfDB(var product: String = "unknown name of product",
+data class ElementOfDB(var product: String = "unknown name of product",
                   var price: Int = -1,
                   var count: Int = -1,
                   var dateOfBuy: LocalDate = LocalDate.now())
