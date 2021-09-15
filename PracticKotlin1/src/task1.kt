@@ -5,8 +5,10 @@ fun main() {
     if (number != null) {
         var sum = 0
         for (currentChar in number) {
-            if ((currentChar - '0') % 2 != 0) sum += currentChar - '0'
+            val int = currentChar - '0'
+            if (int % 2 != 0) sum += int
         }
         println("Sum = $sum")
     }
+    else println("incorrect number!")
 }
