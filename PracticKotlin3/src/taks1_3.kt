@@ -14,6 +14,7 @@ fun main() {
                                     ?.map { it.code - 48 }
                                     ?.filter { it % 2 != 0 }
                                     ?.sum() ?: "empty result"}")
+
     print("Write some integer values with spaces between them -> ")
     println("result №2: ${readLine()?.split(" ")
                                     ?.map { it.toInt() }
@@ -23,9 +24,10 @@ fun main() {
                                                                        .toSet()
                                     }?.reduce { a,b -> a intersect  b }
                                      ?.joinToString( " ") ?: "empty result"}")
+
     print("Write some words with spaces between them -> ")
     println("result №3: ${readLine()?.split(" ")
-                                    ?.firstOrNull {it.isNotEmpty() && it.length % 2 != 0}
-                                    ?.toString()
+                                    ?.filter {it.length % 2 != 0}
+                                    ?.maxByOrNull { it.length }
                                     ?.last() ?: "empty result"}")
 }
