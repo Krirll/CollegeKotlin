@@ -1,51 +1,40 @@
 package interfaces
 
 import table.DataRow
+import table.NullableDataRow
 import java.time.LocalDate
 //_________________________________________Table_____________________________________________________________
-interface Headers {
-    val headers : List<String>
-}
-
-interface Commands {
-    val commands : List<Pair<Int,String>>
-}
-
 interface Table {
-    var list : MutableList<DataRow>
+    fun getList() : Iterable<DataRow>
+    fun add(dataRow: DataRow)
+    fun set(index : Int, dataRow: DataRow)
+    fun delete(index: Int)
 }
 
+interface Column {
+    val name : String
+    fun add(nullableDataRow: NullableDataRow)
+    fun edit(editableRow : DataRow)
+    fun sort(list : List<DataRow>) : List<DataRow>
+    fun search(list : List<DataRow>) : List<DataRow>
+}
+
+//_________________________________________________Input____________________________________________________
 interface RowIndex {
     fun getIndex(message: String, listSize : Int) : Int
 }
 
 interface InputLooper {
-    fun input(message : String, regex : String) : String
+    fun input(message : String, regex : Regex) : String
 }
 
-//________________________________________________Menu Commands_____________________________________________
 interface Read {
     fun readString() : String?
 }
 
-interface AddDataRow {
-    fun addDataRow() : DataRow
-}
-
-interface DeleteData {
-    fun delete(dataBase : Table)
-}
-
-interface EditData {
-    fun edit(dataBase: Table)
-}
-
-interface SortData {
-    fun sortBy(data: MutableList<DataRow>)
-}
-
-interface SearchData {
-    fun search(data : MutableList<DataRow>)
+//________________________________________________Menu Commands_____________________________________________
+interface ExecutorCommand {
+    fun execute(dataBase: Table)
 }
 
 //_____________________________________________Output___________________________________________________________
@@ -54,18 +43,14 @@ interface PrintMessage {
 }
 
 interface PrintCommands {
-    fun printCommands(commands: List<Pair<Int, String>>)
+    fun printCommands(commands: List<String>)
 }
 
-interface PrintData {
-    fun printData(data : MutableList<DataRow>)
+interface PrintColumns {
+    fun printColumns(columns : List<String>)
 }
 
-interface PrintHeaders {
-    fun printHeaders(headers : List<String>)
-}
-
-//______________________________________Validators______________________________________________________________
+//______________________________________Validator______________________________________________________________
 interface StringValidation {
     fun check(regex : Regex, inputString : String?) : Boolean
 }
@@ -80,5 +65,5 @@ interface DoubleParser {
 }
 
 interface DateParser {
-    fun parseToDate(inputString : String?) : LocalDate?
+    fun parseToDate(inputString : String) : LocalDate
 }

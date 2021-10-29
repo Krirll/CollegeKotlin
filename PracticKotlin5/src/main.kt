@@ -2,7 +2,6 @@ import interfaces.*
 import io.*
 import parsers.ParserToInt
 import table.DataTable
-import table.TableCommands
 import validators.ValidateString
 
 /*
@@ -12,61 +11,61 @@ import validators.ValidateString
 База данных расходов семьи. Поля: товар, стоимость, кол-во, дата.
 */
 
-class Menu {
-    private var outputMessage : PrintMessage? = null
-    private var outputCommands : PrintCommands? = null
-    private var tableCommands : Commands? = null
-    private var stringValidation : StringValidation? = null
-    private var intParser : IntParser? = null
-    private var inputString : Read? = null
-    private var dataBase : Table? = null
-    private var outputData : PrintData? = null
-    private var inputDataRow : AddDataRow? = null
-    private var deleteClass : DeleteRow? = null
-    private var editClass : EditData? = null
-    private var searchClass : SearchData? = null
-    private var sortClass : SortData? = null
+class Menu (
+    private val outputMessage : PrintMessage = Speaker(),
+    private val outputCommands : PrintCommands = OutputCommands(),
+    private val stringValidation : StringValidation = ValidateString(),
+    private val intParser : IntParser = ParserToInt(),
+    private val inputString : Read = InputString(),
+    private val dataBase : Table = DataTable(),
+    private val listCommands: List<Triple<Int, String, ExecutorCommand>>
+) {
     fun run() {
-        deleteClass = DeleteRow()
-        dataBase = DataTable()
-        outputData = OutputData()
-        outputCommands = OutputCommands()
-        outputMessage = Speaker()
-        tableCommands = TableCommands()
-        stringValidation = ValidateString()
-        intParser = ParserToInt()
-        inputString = InputString()
-        inputDataRow = InputDataRow()
-        editClass = EditRow()
-        searchClass = SearchRow()
-        sortClass = SortTable()
-        var cmdNum = 0
-        while (cmdNum != tableCommands?.commands?.size!! + 1) {
-            outputMessage?.printMessage("Commands: \n")
-            outputCommands?.printCommands(tableCommands!!.commands)
-            outputMessage?.printMessage("write number of command -> ")
-            val cmd = inputString?.readString()
-            if (stringValidation?.check("[1-${tableCommands!!.commands.size + 1}]".toRegex(), cmd) == true) {
-                cmdNum = intParser?.parseToInt(cmd!!)!!
-                when (cmdNum) {
-                    1 -> dataBase?.list?.add(inputDataRow?.addDataRow()!!)
-                    2 -> editClass?.edit(dataBase!!)
-                    3 -> deleteClass?.delete(dataBase!!)
-                    4 -> sortClass?.sortBy(dataBase?.list!!)
-                    5 -> searchClass?.search(dataBase?.list!!)
-                    6 -> outputData?.printData(dataBase?.list!!)
-                    tableCommands!!.commands.size + 1 ->
-                        outputMessage?.printMessage("\nSee you again)")
-                    else ->
-                        outputMessage?.printMessage("\nCommand wasn't found. Try again!\n")
+        var cmdNum : Int? = 0
+        while (cmdNum != null) {
+            outputMessage.printMessage("Commands: \n")
+            outputCommands.printCommands(listCommands.map { "${it.first + 1}. ${it.second}" })
+            outputMessage.printMessage("If you want to exit, you must to write 'exit'!!!\n")
+            outputMessage.printMessage("write number of command -> ")
+            val cmd = inputString.readString()
+            if (stringValidation.check("^[1-9]+\\d*".toRegex(), cmd)) {
+                cmdNum = intParser.parseToInt(cmd!!) - 1
+                listCommands.firstOrNull {
+                    it.first == cmdNum
+                }?.third?.execute(dataBase)
+                    ?: println("\nCommand wasn't found. Try again!\n")
+            }
+            else {
+                if (stringValidation.check("exit".toRegex(), cmd)) {
+                    outputMessage.printMessage("\nSee you again)\n")
+                    cmdNum = null
+                } else {
+                    outputMessage.printMessage("\nCommand wasn't found. Try again!\n")
                 }
             }
-            else
-                outputMessage?.printMessage("\nCommand wasn't found. Try again!\n")
         }
     }
 }
 
 fun main() {
-    Menu().run()
+    val listCommands : List<Triple<Int, String, ExecutorCommand>> =
+        listOf(Triple(0, "add", InputDataRow()),
+                Triple(1, "edit", EditRow()),
+                Triple(2 , "delete", DeleteRow()),
+                Triple(3, "sort", SortTable()),
+                Triple(4 ,"search", SearchRow()),
+                Triple(5, "print all", OutputData()))
+    val outputMessage : PrintMessage = Speaker()
+    val outputCommands : PrintCommands = OutputCommands()
+    val stringValidation : StringValidation = ValidateString()
+    val intParser : IntParser = ParserToInt()
+    val inputString : Read = InputString()
+    val dataBase : Table = DataTable()
+    Menu(outputMessage,
+        outputCommands,
+        stringValidation,
+        intParser,
+        inputString,
+        dataBase,
+        listCommands).run()
 }

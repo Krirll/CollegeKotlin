@@ -17,21 +17,18 @@ class ParserToDouble : DoubleParser {
     override fun parseToDouble(inputString: String): Double = inputString.toDouble()
 }
 
-class ParserToDate : DateParser {
-    private var output : PrintMessage? = null
-    override fun parseToDate(inputString: String?): LocalDate? {
-        var date : LocalDate? = null
-        output = Speaker()
+class ParserToDate(private var output : PrintMessage = Speaker()) : DateParser {
+    override fun parseToDate(inputString: String): LocalDate {
+        var date = LocalDate.now()
         try {
             val formattedDate = LocalDate.parse(
                 inputString,
                 DateTimeFormatter.ofPattern("dd.MM.yyyy")
             )
-            if (formattedDate != null)
-                date = formattedDate
+            date = formattedDate
         }
         catch (ex: DateTimeParseException) {
-            output?.printMessage("\nНевозможно преобразовать вашу дату, попробуйте снова\n")
+            output.printMessage("\nНевозможно преобразовать вашу дату, попробуйте снова\n")
         }
         return date
     }
