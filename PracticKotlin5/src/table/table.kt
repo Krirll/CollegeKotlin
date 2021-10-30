@@ -36,8 +36,9 @@ class ProductColumn(
     }
 
     override fun edit(editableRow: DataRow) {
-        editableRow.product =
-            looperInput.input("Write a name of product -> ", "\\w+".toRegex())
+        val product = looperInput.input("Write a name of product -> ", "\\w+".toRegex())
+        if (product != null)
+            editableRow.product = product
     }
 
     override fun sort(list : List<DataRow>) : List<DataRow> = list.sortedBy { it.product }
@@ -60,14 +61,15 @@ class PriceColumn(
     override val name : String = "price"
 ) : Column {
     override fun add(nullableDataRow: NullableDataRow) {
-        nullableDataRow.price =
-            doubleParser.parseToDouble(
-                looperInput.input("Write price of product -> ", "^[1-9]+\\d*(\\.\\d+)?\$".toRegex()))
+        val price = looperInput.input("Write price of product -> ", "^[1-9]+\\d*(\\.\\d+)?\$".toRegex())
+        if (price != null)
+            nullableDataRow.price = doubleParser.parseToDouble(price)
     }
 
     override fun edit(editableRow: DataRow) {
-        editableRow.price = doubleParser.parseToDouble(
-            looperInput.input("Write price of product -> ", "^[1-9]+\\d*(\\.\\d+)?\$".toRegex()))
+        val newPrice = looperInput.input("Write price of product -> ", "^[1-9]+\\d*(\\.\\d+)?\$".toRegex())
+        if (newPrice != null)
+            editableRow.price = doubleParser.parseToDouble(newPrice)
     }
 
     override fun sort(list: List<DataRow>): List<DataRow> = list.sortedBy { it.price }
@@ -90,16 +92,15 @@ class CountColumn(
     override val name : String = "count"
 ) : Column{
     override fun add(nullableDataRow: NullableDataRow) {
-        nullableDataRow.count =
-            intParser.parseToInt(
-                looperInput.input("Write count -> ", "^[1-9]+\\d*?".toRegex())
-        )
+        val count = looperInput.input("Write count -> ", "^[1-9]+\\d*?".toRegex())
+        if (count != null)
+            nullableDataRow.count = intParser.parseToInt(count)
     }
 
     override fun edit(editableRow: DataRow) {
-        editableRow.count = intParser.parseToInt(
-            looperInput.input("Write count -> ", "^[1-9]+\\d*?".toRegex())
-        )
+        val newCount = looperInput.input("Write count -> ", "^[1-9]+\\d*?".toRegex())
+        if (newCount != null)
+            editableRow.count = intParser.parseToInt(newCount)
     }
 
     override fun sort(list: List<DataRow>): List<DataRow> = list.sortedBy { it.count }
@@ -124,15 +125,18 @@ class DateColumn(
         nullableDataRow.dateOfBuy = LocalDate.now()
         while (nullableDataRow.dateOfBuy == LocalDate.now()) {
             outputMessage.printMessage("Write date of buy (format dd.mm.yyyy) -> ")
-            nullableDataRow.dateOfBuy = dateParser.parseToDate(inputString.readString()!!)
+            nullableDataRow.dateOfBuy = dateParser.parseToDate(inputString.readString())
         }
     }
 
     override fun edit(editableRow: DataRow) {
         val oldDate = editableRow.dateOfBuy
-        while (editableRow.dateOfBuy == oldDate) {
+        var newDate : LocalDate? = oldDate
+        while (editableRow.dateOfBuy == oldDate || newDate != null) {
             outputMessage.printMessage("Write date of buy (format dd.mm.yyyy) -> ")
-            editableRow.dateOfBuy = dateParser.parseToDate(inputString.readString()!!)
+            newDate = dateParser.parseToDate(inputString.readString())
+            if (newDate != null)
+                editableRow.dateOfBuy
         }
     }
 

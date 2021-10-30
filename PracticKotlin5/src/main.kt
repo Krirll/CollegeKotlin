@@ -28,20 +28,26 @@ class Menu (
             outputMessage.printMessage("If you want to exit, you must to write 'exit'!!!\n")
             outputMessage.printMessage("write number of command -> ")
             val cmd = inputString.readString()
-            if (stringValidation.check("^[1-9]+\\d*".toRegex(), cmd)) {
-                cmdNum = intParser.parseToInt(cmd!!) - 1
-                listCommands.firstOrNull {
-                    it.first == cmdNum
-                }?.third?.execute(dataBase)
-                    ?: println("\nCommand wasn't found. Try again!\n")
+            if (cmd != null) {
+                if (stringValidation.check("^[1-9]+\\d*".toRegex(), cmd)) {
+                    cmdNum = intParser.parseToInt(cmd) - 1
+                    listCommands.firstOrNull {
+                        it.first == cmdNum
+                    }?.third
+                        ?.execute(dataBase)
+                        ?: println("\nCommand wasn't found. Try again!\n")
+                } else {
+                    if (stringValidation.check("exit".toRegex(), cmd)) {
+                        outputMessage.printMessage("\nSee you again)\n")
+                        cmdNum = null
+                    } else {
+                        outputMessage.printMessage("\nCommand wasn't found. Try again!\n")
+                    }
+                }
             }
             else {
-                if (stringValidation.check("exit".toRegex(), cmd)) {
-                    outputMessage.printMessage("\nSee you again)\n")
-                    cmdNum = null
-                } else {
-                    outputMessage.printMessage("\nCommand wasn't found. Try again!\n")
-                }
+                outputMessage.printMessage("\nВыход из программы\n")
+                cmdNum = null
             }
         }
     }

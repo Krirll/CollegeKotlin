@@ -18,11 +18,11 @@ class ParserToDouble : DoubleParser {
 }
 
 class ParserToDate(private var output : PrintMessage = Speaker()) : DateParser {
-    override fun parseToDate(inputString: String): LocalDate {
-        var date = LocalDate.now()
+    override fun parseToDate(inputString: String?): LocalDate? {
+        var date : LocalDate? = null
         try {
             val formattedDate = LocalDate.parse(
-                inputString,
+                inputString ?: "",
                 DateTimeFormatter.ofPattern("dd.MM.yyyy")
             )
             date = formattedDate

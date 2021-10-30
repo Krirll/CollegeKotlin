@@ -21,11 +21,11 @@ interface Column {
 
 //_________________________________________________Input____________________________________________________
 interface RowIndex {
-    fun getIndex(message: String, listSize : Int) : Int
+    fun getIndex(message: String, listSize : Int) : Int?
 }
 
 interface InputLooper {
-    fun input(message : String, regex : Regex) : String
+    fun input(message : String, regex : Regex) : String?
 }
 
 interface Read {
@@ -65,5 +65,5 @@ interface DoubleParser {
 }
 
 interface DateParser {
-    fun parseToDate(inputString : String) : LocalDate
+    fun parseToDate(inputString : String?) : LocalDate?
 }
