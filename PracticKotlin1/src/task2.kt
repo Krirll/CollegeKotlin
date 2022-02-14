@@ -5,29 +5,32 @@ fun main() {
     val string = readLine()
     if (string != null && string != "") {
         var currentIndex = 0
-                          //0  1  2  3  4  5  6  7  8  9
-        val array = arrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-        var exist = false
+        var saveIndex = 0
+        val array = Array(10) {0} //0  1  2  3  4  5  6  7  8  9
+        var exit = false
         var countNumbers = 0
-        for (int in string) {
-            if (!exist && int == string[currentIndex]) {
-                exist = true
-            }
-            if (int == ' ') {
-                var a = 0
-                if (currentIndex != 0)
-                    a = string[currentIndex - 1].code
-                if (a in 0..9) {
-                    array[a] += 1
-                    countNumbers += 1
+        var resultCount = 0
+            if (string[currentIndex] != ' ') {
+                while (saveIndex < string.length) {
+                    if (!exit && string[saveIndex] == string[currentIndex]) {
+                        exit = true
+                        val index = string[currentIndex] - '0'
+                        if (array[index] <= countNumbers) array[index] += 1
+                    }
+                    if (string[saveIndex] == ' ') {
+                        exit = false
+                        saveIndex = currentIndex
+                        countNumbers++
+                    }
+                    saveIndex++
                 }
-                exist = false
+                resultCount = ++countNumbers
+                countNumbers = 0
+                exit = false
             }
-            currentIndex += 1
-        }
         currentIndex = 0
         while (currentIndex < array.size) {
-            if (array[currentIndex] == countNumbers) print("$currentIndex ")
+            if (array[currentIndex] ==  resultCount) print("$currentIndex ")
             currentIndex += 1
         }
     }

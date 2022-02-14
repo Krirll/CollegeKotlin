@@ -16,28 +16,32 @@ import java.time.LocalDate
 Список должен быть реализован в виде класса.
 */
 
-class List (private var list : MutableList<String> = mutableListOf()) {
+class List<T> (private val list : MutableList<T> = mutableListOf()) {
 
-    fun<T> insert(elem : T, n : Int) : Boolean {
-        val currentSize = list.size
-        if (n - 1 in 0..currentSize) list.add(n - 1, elem.toString())
-        return list.size > currentSize //if element was added - true, else false
-    }
+    fun insert(elem : T, n : Int) =
+        if (n - 1 in 0..list.size) {
+            list.add(n - 1, elem)
+            true
+        } else
+            false
 
-    fun delete() : Boolean {
-        val currentSize = list.size
-        if (list.isNotEmpty()) list.removeAt(0)
-        return list.size < currentSize //if element was deleted - true, else false
-    }
+    fun delete() =
+        if (list.isNotEmpty()) {
+            list.removeAt(0)
+            true
+        } else
+            false
+
     fun print() = if (list.isNotEmpty()) println(list.last()) else println("List is empty")
-    fun eraseAll() = list.removeAll(list)
+
+    fun eraseAll() = list.clear()
 }
 
 fun main() {
-    val list = List()
-    list.insert("some", 1)
-    list.insert(LocalDate.now(), 1)
-    list.insert(10, 3)
+    val list = List<String>(mutableListOf())
+    println(list.insert("some", 1))
+    println(list.insert(LocalDate.now().toString(), 1))
+    list.insert((10).toString(), 3)
     list.insert("new", 2)
     list.delete()
     list.print()

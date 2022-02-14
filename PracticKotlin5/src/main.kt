@@ -62,6 +62,7 @@ fun main() {
                 Triple(4 ,"search", SearchRow()),
                 Triple(5, "print all", OutputData()))
     val outputMessage : PrintMessage = Speaker()
+
     val outputCommands : PrintCommands = OutputCommands()
     val stringValidation : StringValidation = ValidateString()
     val intParser : IntParser = ParserToInt()
